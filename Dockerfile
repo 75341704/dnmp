@@ -37,7 +37,7 @@ RUN apt install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev \
     && docker-php-ext-install $mc pdo_mysql \
     && docker-php-ext-install $mc mysqli \
     && docker-php-ext-install $mc mbstring \
-    && docker-php-ext-install $mc exif
+    && docker-php-ext-install $mc exif \
 #    && docker-php-ext-install $mc bcmath \
 #    && docker-php-ext-install $mc calendar \
 #    && docker-php-ext-install $mc sockets \
@@ -48,17 +48,17 @@ RUN apt install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev \
 #    && docker-php-ext-install $mc sysvshm \
 #    && docker-php-ext-install $mc pdo_firebird \
 #    && docker-php-ext-install $mc pdo_dblib \
-#    && docker-php-ext-install $mc pdo_oci \
+    # && docker-php-ext-install $mc pdo_oci \
 #    && docker-php-ext-install $mc pdo_odbc \
 #    && docker-php-ext-install $mc pdo_pgsql \
 #    && docker-php-ext-install $mc pgsql \
-#    && docker-php-ext-install $mc oci8 \
-#    && docker-php-ext-install $mc odbc \
+  #  && docker-php-ext-install $mc oci8 \
+  #  && docker-php-ext-install $mc odbc \
 #    && docker-php-ext-install $mc dba \
 #    && docker-php-ext-install $mc interbase \
 #    && :\
-#    && apt install -y libxml2-dev \
-#    && apt install -y libxslt-dev \
+   && apt install -y libxml2-dev \
+   && apt install -y libxslt-dev \
 #    && docker-php-ext-install $mc soap \
 #    && docker-php-ext-install $mc xsl \
 #    && docker-php-ext-install $mc xmlrpc \
@@ -68,10 +68,10 @@ RUN apt install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev \
 #    && pecl install sqlsrv pdo_sqlsrv \
 #    && docker-php-ext-enable sqlsrv pdo_sqlsrv
 #    && :\
-#    && apt install -y curl \
-#    && apt install -y libcurl3 \
-#    && apt install -y libcurl4-openssl-dev \
-#    && docker-php-ext-install $mc curl \
+   && apt install -y curl \
+   && apt install -y libcurl3 \
+   && apt install -y libcurl4-openssl-dev \
+   && docker-php-ext-install $mc curl \
 #    && :\
 #    && apt install -y libreadline-dev \
 #    && docker-php-ext-install $mc readline \
@@ -107,10 +107,10 @@ RUN apt install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev \
 #    && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu \
 #    && docker-php-ext-install $mc ldap \
 #    && :\
-#    && apt install -y libmagickwand-dev \
-#    && pecl install imagick-3.4.3 \
-#    && docker-php-ext-enable imagick \
-#    && :\
-#    && apt install -y libmemcached-dev zlib1g-dev \
-#    && pecl install memcached-2.2.0 \
-#    && docker-php-ext-enable memcached
+   && apt install -y libmagickwand-dev \
+   && pecl install imagick-3.4.3 \
+   && docker-php-ext-enable imagick \
+   && :\
+   && apt install -y libmemcached-dev zlib1g-dev \
+   && pecl install memcached-2.2.0 \
+   && docker-php-ext-enable memcached
