@@ -18,12 +18,51 @@ RUN chmod +x /tmp/extensions/install.sh \
     && /tmp/extensions/install.sh \
     && rm -rf /tmp/extensions
 
+# Oracle instantclient
+ADD oracle/instantclient-basic-linux.x64-11.2.0.4.0.zip /tmp/instantclient-basic-linux.x64-11.2.0.4.0.zip
+ADD oracle/instantclient-sdk-linux.x64-11.2.0.4.0.zip /tmp/instantclient-sdk-linux.x64-11.2.0.4.0.zip
+ADD oracle/instantclient-sqlplus-linux.x64-11.2.0.4.0.zip /tmp/instantclient-sqlplus-linux.x64-11.2.0.4.0.zip
+
+# ADD oracle/oci8-2.2.0.tgz /tmp/oci8-2.2.0.tgz
+# RUN cd /tmp/
+# RUN tar -zxf oci8-2.2.0.tgz
+# RUN phpize \
+#     && ./configure -with-oci8=shared,instantclient,/usr/local/instantclient \
+#     && make install
+
+RUN apt-get install -y unzip
+RUN unzip /tmp/instantclient-basic-linux.x64-11.2.0.4.0.zip -d /usr/local/
+RUN unzip /tmp/instantclient-sdk-linux.x64-11.2.0.4.0.zip -d /usr/local/
+RUN unzip /tmp/instantclient-sqlplus-linux.x64-11.2.0.4.0.zip -d /usr/local/
+RUN ln -s /usr/local/instantclient_11_2 /usr/local/instantclient
+RUN ln -s /usr/local/instantclient/libclntsh.so.11.1 /usr/local/instantclient/libclntsh.so
+RUN ln -s /usr/local/instantclient/libnnz11.so /usr/lib/libnnz11.so
+RUN ln -s /usr/local/instantclient/sqlplus /usr/bin/sqlplus
+# RUN export ORACLE_HOME=/usr/local/instantclient_11_2
+RUN apt-get install libaio-dev -y
+# RUN echo 'instantclient,/usr/local/instantclient' | pecl install oci8
+# ADD php/oci8.ini /etc/php5/cli/conf.d/30-oci8.ini
+RUN docker-php-ext-configure pdo_oci --with-pdo-oci=instantclient,/usr/local/instantclient,12.1 \
+       && echo 'instantclient,/usr/local/instantclient' | pecl install oci8 \
+       && docker-php-ext-install \
+               pdo_oci \
+       && docker-php-ext-enable \
+               oci8
 # More extensions
 # 1. soap requires libxml2-dev.
 # 2. xml, xmlrpc, wddx require libxml2-dev and libxslt-dev.
 # 3. Line `&& :\` do nothing just for better reading.
+# Install Oracle extensions
 RUN apt install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+    # && docker-php-ext-configure pdo_oci --with-pdo-oci=instantclient,/usr/local/instantclient,12.1 \
+    # && echo 'instantclient,/usr/local/instantclient' | pecl install oci8 \
+    # && docker-php-ext-install $mc pdo_oci \
+#    && docker-php-ext-install $mc pdo_odbc \
+#    && docker-php-ext-install $mc pdo_pgsql \
+#    && docker-php-ext-install $mc pgsql \
+  #  && docker-php-ext-install $mc oci8 \
+    # && docker-php-ext-enable $mc oci8 \
     && docker-php-ext-install $mc gd \
     && :\
     && apt install -y libicu-dev \
@@ -48,11 +87,6 @@ RUN apt install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev \
 #    && docker-php-ext-install $mc sysvshm \
 #    && docker-php-ext-install $mc pdo_firebird \
 #    && docker-php-ext-install $mc pdo_dblib \
-    # && docker-php-ext-install $mc pdo_oci \
-#    && docker-php-ext-install $mc pdo_odbc \
-#    && docker-php-ext-install $mc pdo_pgsql \
-#    && docker-php-ext-install $mc pgsql \
-  #  && docker-php-ext-install $mc oci8 \
   #  && docker-php-ext-install $mc odbc \
 #    && docker-php-ext-install $mc dba \
 #    && docker-php-ext-install $mc interbase \
@@ -109,8 +143,8 @@ RUN apt install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev \
 #    && :\
    && apt install -y libmagickwand-dev \
    && pecl install imagick-3.4.3 \
-   && docker-php-ext-enable imagick \
-   && :\
-   && apt install -y libmemcached-dev zlib1g-dev \
-   && pecl install memcached-2.2.0 \
-   && docker-php-ext-enable memcached
+   && docker-php-ext-enable imagick 
+  #  && :\
+  #  && apt install -y libmemcached-dev zlib1g-dev \
+  #  && pecl install memcached-2.2.0 \
+  #  && docker-php-ext-enable memcached
